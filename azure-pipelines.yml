@@ -1,0 +1,53 @@
+trigger:
+  - main
+  - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  nodeVersion: '18.x'
+
+stages:
+  - stage: Build
+    displayName: 'Build and Test'
+    jobs:
+      - job: PlaywrightTests
+        displayName: 'Run Playwright Tests'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+            displayName: 'Install Node.js'
+
+          - task: Npm@1
+            inputs:
+              command: 'install'
+            displayName: 'Install dependencies'
+
+          - task: Npm@1
+            inputs:
+              command: 'custom'
+              customCommand: 'exec playwright install'
+            displayName: 'Install Playwright browsers'
+
+          - script: |
+              npx playwright test
+            displayName: 'Run Playwright tests'
+            continueOnError: true
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'test-results/junit.xml'
+              mergeTestResults: true
+              testRunTitle: 'Playwright Test Results'
+            condition: succeededOrFailed()
+            displayName: 'Publish test results'
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: 'playwright-report'
+              artifactName: 'playwright-report'
+            condition: succeededOrFailed()
+            displayName: 'Publish Playwright report'
