@@ -1,14 +1,11 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS'   // must match Jenkins Node config name
-    }
-
-    stages {
-        stage('Checkout') {
+     stages {
+        stage('Check Node') {
             steps {
-                checkout scm
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
 
