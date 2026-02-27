@@ -8,27 +8,27 @@ pipeline {
     stages {
         stage('Check Node') {
             steps {
-                sh 'node -v'
-                sh 'npm -v'
+                bat 'node -v'
+                bat 'npm -v'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
-                sh 'npx playwright install'
+                bat 'npm ci'
+                bat 'npx playwright install'
             }
         }
 
         stage('QAPipeline') {
             steps {
-                sh 'npx playwright test'
+                bat 'npx playwright test'
             }
         }
 
         stage('QA 2nd Process') {
             steps {
-                sh 'npx playwright test'
+                bat 'npx playwright test'
             }
         }
     }
