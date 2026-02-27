@@ -1,7 +1,11 @@
 pipeline {
     agent any
 
-     stages {
+    tools {
+        nodejs 'NodeJS'
+    }
+
+    stages {
         stage('Check Node') {
             steps {
                 sh 'node -v'
@@ -11,7 +15,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh 'npm ci'
                 sh 'npx playwright install'
             }
         }
