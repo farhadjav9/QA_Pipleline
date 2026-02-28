@@ -8,14 +8,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                checkout scmGit(
-                    branches: [[name: '*/main']],
-                    extensions: [],
-                    userRemoteConfigs: [[
-                        credentialsId: '64f9698d-e53f-4726-b351-79852421b361',
-                        url: 'https://github.com/farhadjav9/QA_Pipleline.git'
-                    ]]
-                )
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'Webhook', url: 'https://github.com/farhadjav9/QA_Pipleline']])
             }
         }
 
