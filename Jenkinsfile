@@ -2,8 +2,8 @@ pipeline {
     agent {
         docker {
             // Official Playwright Docker image with browsers pre-installed
-            image 'mcr.microsoft.com/playwright:v1.42.0-focal'
-            args '-u root:root --shm-size=2g' // shared memory for Chromium
+            image 'mcr.microsoft.com/playwright:v1.58.2-noble'
+            args '--shm-size=2g' // shared memory for Chromium
         }
     }
 
@@ -33,7 +33,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'                   // install exact versions
+                sh 'npm install'               // install dependencies
                 sh 'npx playwright install'    // install browsers
             }
         }

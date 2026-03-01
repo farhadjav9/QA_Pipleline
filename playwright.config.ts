@@ -30,7 +30,7 @@ export default defineConfig({
   workers: 1,
   use: {
     baseURL: process.env.APP_URL,
-    headless: false,
+    headless: true,
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
 
