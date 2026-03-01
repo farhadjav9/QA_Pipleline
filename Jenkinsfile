@@ -48,10 +48,10 @@ pipeline {
         stage('Parallel Tests') {
   parallel {
     stage('Chrome') {
-      steps { sh 'npm run test:chrome' }
+      steps { bat 'npm run test:chrome' }
     }
     stage('Firefox') {
-      steps { sh 'npm run test:firefox' }
+      steps { bat 'npm run test:firefox' }
     }
   }
 }
