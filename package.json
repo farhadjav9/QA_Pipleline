@@ -6,7 +6,7 @@
   "scripts": {
      "test": "npx playwright test",
     "test:chrome": "npx playwright test --project=chromium",
-    "test:firefox": "npx playwright test --project=edge"
+    "test:edge": "npx playwright test --project=msedge"
   },
   "keywords": [],
   "author": "",
