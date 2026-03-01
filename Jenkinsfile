@@ -1,14 +1,19 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            // Official Playwright Docker image with browsers pre-installed
+            image 'mcr.microsoft.com/playwright:v1.42.0-focal'
+            args '-u root:root --shm-size=2g' // shared memory for Chromium
+        }
+    }
 
-    tools {
-        nodejs 'NodeJS'
+    environment {
+        NODE_ENV = 'test'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                // Checkout using your specified scmGit
                 checkout scmGit(
                     branches: [[name: '*/main']],
                     extensions: [],
@@ -21,34 +26,44 @@ pipeline {
 
         stage('Check Node') {
             steps {
-                bat 'node -v'
-                bat 'npm -v'
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm ci'
-                bat 'npx playwright install'
+                sh 'npm ci'                   // install exact versions
+                sh 'npx playwright install'    // install browsers
             }
         }
 
-        stage('QAPipeline') {
+        stage('Run Playwright Tests') {
             steps {
-                bat 'npx playwright test'
+                // Run all tests in parallel with config (workers, browsers)
+                sh 'npx playwright test'
             }
         }
 
-        stage('QA 2nd Process') {
+        stage('Run QA 2nd Process') {
             steps {
-                bat 'npx playwright test'
+                // Optional: run specific tests again or in serial if needed
+                sh 'npx playwright test'
             }
-}
+        }
     }
 
     post {
         always {
+            // Archive HTML reports for review
             archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
         }
+
+        // failure {
+        //     // Optional: email notifications if tests fail
+        //     mail to: 'team@example.com',
+        //          subject: "Playwright Tests Failed: ${env.JOB_NAME}",
+        //          body: "Check Jenkins build: ${env.BUILD_URL}"
+        // }
     }
 }
