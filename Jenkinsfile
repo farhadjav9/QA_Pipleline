@@ -44,6 +44,17 @@ pipeline {
                 bat 'npx playwright test'
             }
         }
+
+        stage('Parallel Tests') {
+  parallel {
+    stage('Chrome') {
+      steps { sh 'npm run test:chrome' }
+    }
+    stage('Firefox') {
+      steps { sh 'npm run test:firefox' }
+    }
+  }
+}
     }
 
     post {
