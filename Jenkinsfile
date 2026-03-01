@@ -43,17 +43,6 @@ pipeline {
             steps {
                 bat 'npx playwright test'
             }
-        }
-
-        stage('Parallel Tests') {
-  parallel {
-    stage('Chrome') {
-      steps { bat 'npm run test:chrome' }
-    }
-    stage('Edge') {
-      steps { bat 'npm run test:edge'}
-    }
-  }
 }
     }
 
