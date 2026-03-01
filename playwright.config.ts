@@ -41,11 +41,7 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'msedge',
-      use: { ...devices['Desktop Edge'] },
-    },
+    }
   ],
 
   /* Run your local dev server before starting the tests */
