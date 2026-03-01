@@ -50,8 +50,8 @@ pipeline {
     stage('Chrome') {
       steps { bat 'npm run test:chrome' }
     }
-    stage('Firefox') {
-      steps { bat 'npm run test:firefox' }
+    stage('Edge') {
+      steps { bat 'npm run test:edge'}
     }
   }
 }
