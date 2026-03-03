@@ -1,13 +1,9 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/playwright:v1.42.1-jammy' // Playwright Docker image
-            args '--user root'
-        }
-    }
+    agent any
 
     environment {
-        NODE_ENV = 'qa'
+        IMAGE_NAME = "qa-pipeline-app"
+        CONTAINER_NAME = "qa-pipeline-container"
     }
 
     stages {
@@ -25,33 +21,51 @@ pipeline {
 
         stage('Check Node') {
             steps {
-                sh 'node -v'
-                sh 'npm -v'
+                bat 'node -v'
+                bat 'npm -v'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
-                sh 'npx playwright install'
+                bat 'npm ci'
+                bat 'npx playwright install'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                bat 'docker build -t %IMAGE_NAME% .'
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                // Remove old container if exists
+                bat 'docker rm -f %CONTAINER_NAME% || exit 0'
+                // Run new container
+                bat 'docker run -d -p 3000:3000 --name %CONTAINER_NAME% %IMAGE_NAME%'
             }
         }
 
         stage('QAPipeline') {
             steps {
-                sh 'npx playwright test'
+                // Execute tests inside the container
+                bat 'docker exec %CONTAINER_NAME% npx playwright test'
             }
         }
 
         stage('QA 2nd Process') {
             steps {
-                sh 'npx playwright test'
+                bat 'docker exec %CONTAINER_NAME% npx playwright test'
             }
         }
     }
 
     post {
         always {
+            // Collect test reports from container
+            bat 'docker cp %CONTAINER_NAME%:/app/playwright-report ./playwright-report || echo "No report found"'
             archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
         }
     }
