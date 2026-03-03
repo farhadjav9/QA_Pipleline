@@ -1,14 +1,18 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'mcr.microsoft.com/playwright:v1.42.1-jammy' // Playwright Docker image
+            args '--user root'
+        }
+    }
 
-    tools {
-        nodejs 'NodeJS'
+    environment {
+        NODE_ENV = 'qa'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                // Checkout using your specified scmGit
                 checkout scmGit(
                     branches: [[name: '*/main']],
                     extensions: [],
@@ -21,29 +25,29 @@ pipeline {
 
         stage('Check Node') {
             steps {
-                bat 'node -v'
-                bat 'npm -v'
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm ci'
-                bat 'npx playwright install'
+                sh 'npm ci'
+                sh 'npx playwright install'
             }
         }
 
         stage('QAPipeline') {
             steps {
-                bat 'npx playwright test'
+                sh 'npx playwright test'
             }
         }
 
         stage('QA 2nd Process') {
             steps {
-                bat 'npx playwright test'
+                sh 'npx playwright test'
             }
-}
+        }
     }
 
     post {
