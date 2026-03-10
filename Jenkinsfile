@@ -63,11 +63,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            // Archive Playwright reports
-            archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
-        }
-    }
 }
