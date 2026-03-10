@@ -6,8 +6,8 @@ pipeline {
     }
 
     environment {
-        BROWSERSTACK_USERNAME = credentials('browserstack-username')
-        BROWSERSTACK_ACCESS_KEY = credentials('browserstack-access-key')
+        // BrowserStack credentials stored in Jenkins
+        BROWSERSTACK_CREDENTIALS = credentials('browserstack')
         BROWSERSTACK_BUILD_NAME = "Jenkins-Build-${BUILD_NUMBER}"
     }
 
@@ -26,36 +26,48 @@ pipeline {
 
         stage('Check Node') {
             steps {
-                script {
-                    bat 'node -v'
-                    bat 'npm -v'
-                }
+                bat 'node -v'
+                bat 'npm -v'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                script {
-                    bat 'npm ci'
-                    bat 'npx playwright install'
-                }
+                bat 'npm ci'
+                bat 'npx playwright install'
             }
         }
 
         stage('Run Playwright on BrowserStack') {
             steps {
-                script {
-                    bat 'npx playwright test'
-                }
+                // Run tests directly on Jenkins agent and connect to BrowserStack
+                bat """
+                npx playwright test \
+                    --project=bs-chrome \
+                    --user %BROWSERSTACK_CREDENTIALS_USR% \
+                    --key %BROWSERSTACK_CREDENTIALS_PSW% \
+                    --build-name %BROWSERSTACK_BUILD_NAME%
+                """
             }
         }
 
         stage('QA 2nd Process') {
             steps {
-                script {
-                    bat 'npx playwright test'
-                }
+                bat """
+                npx playwright test \
+                    --project=bs-firefox \
+                    --user %BROWSERSTACK_CREDENTIALS_USR% \
+                    --key %BROWSERSTACK_CREDENTIALS_PSW% \
+                    --build-name %BROWSERSTACK_BUILD_NAME%
+                """
             }
         }
-    }  
+    }
+
+    post {
+        always {
+            // Archive Playwright reports
+            archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+        }
+    }
 }
