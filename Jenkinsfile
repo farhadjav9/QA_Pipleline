@@ -5,10 +5,15 @@ pipeline {
         nodejs 'NodeJS'
     }
 
+    environment {
+        BROWSERSTACK_USERNAME = credentials('browserstack-username')
+        BROWSERSTACK_ACCESS_KEY = credentials('browserstack-access-key')
+        BROWSERSTACK_BUILD_NAME = "Jenkins-Build-${BUILD_NUMBER}"
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
-                // Checkout using your specified scmGit
                 checkout scmGit(
                     branches: [[name: '*/main']],
                     extensions: [],
@@ -33,7 +38,7 @@ pipeline {
             }
         }
 
-        stage('QAPipeline') {
+        stage('Run Playwright on BrowserStack') {
             steps {
                 bat 'npx playwright test'
             }
@@ -43,7 +48,7 @@ pipeline {
             steps {
                 bat 'npx playwright test'
             }
-}
+        }
     }
 
     post {
