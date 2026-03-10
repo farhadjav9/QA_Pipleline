@@ -61,9 +61,7 @@ pipeline {
 
     post {
         always {
-            node { // Ensure FilePath context for archiving artifacts
-                archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
-            }
+            archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
         }
     }
 }
