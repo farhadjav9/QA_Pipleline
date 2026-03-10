@@ -51,9 +51,11 @@ pipeline {
         }
     }
 
-    post {
-        always {
+   post {
+    always {
+        script {
             archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
         }
     }
+}
 }
