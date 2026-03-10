@@ -26,36 +26,44 @@ pipeline {
 
         stage('Check Node') {
             steps {
-                bat 'node -v'
-                bat 'npm -v'
+                script {
+                    bat 'node -v'
+                    bat 'npm -v'
+                }
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm ci'
-                bat 'npx playwright install'
+                script {
+                    bat 'npm ci'
+                    bat 'npx playwright install'
+                }
             }
         }
 
         stage('Run Playwright on BrowserStack') {
             steps {
-                bat 'npx playwright test'
+                script {
+                    bat 'npx playwright test'
+                }
             }
         }
 
         stage('QA 2nd Process') {
             steps {
-                bat 'npx playwright test'
+                script {
+                    bat 'npx playwright test'
+                }
             }
         }
     }
 
-   post {
-    always {
-        script {
-            archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+    post {
+        always {
+            node { // Ensure FilePath context for archiving artifacts
+                archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+            }
         }
     }
-}
 }
