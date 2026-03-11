@@ -6,8 +6,8 @@ pipeline {
     }
 
     environment {
-        // BrowserStack credentials stored in Jenkins
-        BROWSERSTACK_CREDENTIALS = credentials('browserstack')
+        BROWSERSTACK_USERNAME = credentials('browserstack-username')
+        BROWSERSTACK_ACCESS_KEY = credentials('browserstack-access-key')
         BROWSERSTACK_BUILD_NAME = "Jenkins-Build-${BUILD_NUMBER}"
     }
 
