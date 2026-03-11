@@ -34,33 +34,20 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 bat 'npm ci'
-                bat 'npx playwright install'
+                bat 'npx playwrighWt install'
             }
         }
 
         stage('Run Playwright on BrowserStack') {
             steps {
-                // Run tests directly on Jenkins agent and connect to BrowserStack
-                bat """
-                npx playwright test \
-                    --project=bs-chrome \
-                    --user %BROWSERSTACK_CREDENTIALS_USR% \
-                    --key %BROWSERSTACK_CREDENTIALS_PSW% \
-                    --build-name %BROWSERSTACK_BUILD_NAME%
-                """
+                bat 'npx browserstack-node-sdk playwright test'
             }
         }
 
-        stage('QA 2nd Process') {
+        stage('QA 2nd Process') {W
             steps {
-                bat """
-                npx playwright test \
-                    --project=bs-firefox \
-                    --user %BROWSERSTACK_CREDENTIALS_USR% \
-                    --key %BROWSERSTACK_CREDENTIALS_PSW% \
-                    --build-name %BROWSERSTACK_BUILD_NAME%
-                """
+                bat 'npx browserstack-node-sdk playwright test'
             }
         }
     }
-}
+}W
