@@ -34,7 +34,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 bat 'npm ci'
-                bat 'npx playwrighWt install'
+                bat 'npx playwright install'
             }
         }
 
@@ -44,10 +44,10 @@ pipeline {
             }
         }
 
-        stage('QA 2nd Process') {W
+        stage('QA 2nd Process') {
             steps {
                 bat 'npx browserstack-node-sdk playwright test'
             }
         }
     }
-}W
+}
