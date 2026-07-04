@@ -5,8 +5,6 @@ pipeline {
         nodejs 'NodeJS'
     }
 
-    environment {}
-
     stages {
         stage('Checkout Code') {
             steps {
