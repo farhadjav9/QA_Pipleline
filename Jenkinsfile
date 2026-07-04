@@ -5,11 +5,7 @@ pipeline {
         nodejs 'NodeJS'
     }
 
-    environment {
-        BROWSERSTACK_USERNAME = credentials('browserstack-username')
-        BROWSERSTACK_ACCESS_KEY = credentials('browserstack-access-key')
-        BROWSERSTACK_BUILD_NAME = "Jenkins-Build-${BUILD_NUMBER}"
-    }
+    environment {}
 
     stages {
         stage('Checkout Code') {
@@ -38,15 +34,15 @@ pipeline {
             }
         }
 
-        stage('Run Playwright on BrowserStack') {
+        stage('Run Playwright Tests') {
             steps {
-                bat 'npx browserstack-node-sdk playwright test'
+                bat 'npx playwright test'
             }
         }
 
         stage('QA 2nd Process') {
             steps {
-                bat 'npx browserstack-node-sdk playwright test'
+                bat 'npx playwright test'
             }
         }
     }
