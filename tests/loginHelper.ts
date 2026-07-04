@@ -4,7 +4,7 @@ import { LoginPage } from '../pages/LoginPage';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../config/.env') });
+dotenv.config({ path: path.resolve(__dirname, '../config/.env'), override: true });
 
 export async function login(page: Page): Promise<LoginPage> {
   const loginPage = new LoginPage(page);

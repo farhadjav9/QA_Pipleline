@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from "dotenv";
-dotenv.config();
+import * as path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, 'config/.env'), override: true });
 
 /**
  * Read environment variables from file.
@@ -30,7 +32,7 @@ export default defineConfig({
   workers: 1,
   use: {
     baseURL: process.env.APP_URL,
-    headless: true,
+    headless: false,
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
 
